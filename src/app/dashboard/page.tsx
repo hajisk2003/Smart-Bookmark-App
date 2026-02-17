@@ -13,16 +13,25 @@ export default function Dashboard() {
   }, []);
 
   async function checkUser() {
-    const { data } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getUser();
 
-    if (!data.user) {
-      window.location.href = "/";
-      return;
-    }
-
-    loadBookmarks();
-    realtime();
+  if (!data.user) {
+    window.location.href = "/";
+    return;
   }
+
+  // remove token from URL
+  if (window.location.hash) {
+    window.history.replaceState(
+      {},
+      document.title,
+      window.location.pathname
+    );
+  }
+
+  loadBookmarks();
+  realtime();
+}
 
   async function loadBookmarks() {
     const { data } = await supabase
