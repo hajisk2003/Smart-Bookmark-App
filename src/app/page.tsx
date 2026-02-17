@@ -1,14 +1,28 @@
 "use client";
 
+import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
 export default function Home() {
+
+  // If user already logged in → go to dashboard
+  useEffect(() => {
+    checkSession();
+  }, []);
+
+  async function checkSession() {
+    const { data } = await supabase.auth.getUser();
+    if (data.user) {
+      window.location.href = "/dashboard";
+    }
+  }
+
   const login = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-  redirectTo: `${window.location.origin}/dashboard`,
-},
+        redirectTo: `${window.location.origin}/dashboard`,
+      },
     });
   };
 
